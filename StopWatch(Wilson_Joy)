@@ -1,0 +1,112 @@
+Titanium.UI.setBackgroundColor('#322340');
+var win = Titanium.UI.createWindow({
+    title:"",
+    backgroundColor:"#302226",
+    exitOnClose: true 
+});
+ 
+var view01 = Titanium.UI.createView({
+    backgroundColor:"#9568BF"
+});
+  
+var timerlabel = Titanium.UI.createLabel({
+    text: "00:00:00.0",
+    top: 20,
+    textAlign:"center", 
+    font: {
+        fontSize: 50,
+        fontFamily: 'Helvetica Neue'
+       }
+});
+ 
+var buttonStart = Titanium.UI.createButton({
+   title: 'START',
+   top: 90,
+   left: 0,
+   width: '50%',
+   height: 50 
+});
+ 
+var buttonLap = Titanium.UI.createButton({
+    title:'LAP',
+    top: 150,
+    width: "100%",
+    height: 50
+});
+ 
+var buttonStop = Titanium.UI.createButton({
+    title:'STOP',
+    top: 90,
+    right: 0,
+    width: "50%",
+    height: 50
+});
+ 
+var _startStopwatch = function() {
+    timerlabel.value = '00:00:00.0';
+ 
+var startTime = new Date();
+ 
+var _updateTimer = function updateTimer() {
+    var UNIT_HOUR = 60 * 60 * 1000;
+    var UNIT_MINUTE = 60 * 1000;
+    var UNIT_SEC = 1000;
+    var now = new Date();
+    var diff = now.getTime() - startTime.getTime();
+    var hour = Math.floor(diff / UNIT_HOUR);
+    var minute = Math.floor((diff - hour * UNIT_HOUR) / UNIT_MINUTE);
+    var sec = Math.floor((diff - hour * UNIT_HOUR - minute * UNIT_MINUTE) / UNIT_SEC);
+    var msec = Math.floor(diff % UNIT_SEC);
+    timerlabel.text = ('0' + hour).slice(-2) + ':' + ('0' + minute).slice(-2) + ':' + ('0' + sec).slice(-2) + '.' + ('00' + msec).slice(-1);
+    };
+ 
+    intervalid = setInterval(_updateTimer, 3);
+    buttonStop.title = 'STOP';
+    };
+ 
+    var _stopStopwatch = function() {
+        clearInterval(intervalid);
+    };
+ 
+    var started = false;
+    var intervalid = null;
+ 
+buttonStart.addEventListener("click", function(e){
+    if (!started) {
+        _startStopwatch();
+        started = true;
+      } 
+  buttonLap.title = "LAP";
+});
+ 
+buttonLap.addEventListener("click", function(e){
+    if (started) {    
+        _stopStopwatch();
+        started = false;
+    }
+  buttonLap.title = "Work in Progress";
+});
+ 
+buttonStop.addEventListener("click", function(e){
+    if (started) {    
+        _stopStopwatch();
+        started = false;
+    }
+    buttonStop.title = "RESET (Double Click)";
+});
+
+buttonStop.addEventListener("dblclick", function(e){
+	if (buttonStop.title = "RESET (Double Click)") {
+		_stopStopwatch();
+		started = false; 
+	}
+	timerlabel.text = '00:00:00.0';
+});
+ 
+win.add(view01);
+win.add(buttonStart);
+win.add(buttonLap);
+win.add(buttonStop);
+win.add(timerlabel);
+ 
+win.open();
